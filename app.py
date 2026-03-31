@@ -1,16 +1,13 @@
 from flask import Flask
 from models import db
 from models.user import User
-from routes.generate_resume import resume_bp  # Import your new blueprint
 from config import Config
 from flask_security import Security
 from flask_restful import Api
 from user_datastore import user_datastore
-from api.auth_apis import LoginUser, SignUpUser,LogoutUser
-from api.profile_api import ProfileAPI
-from api.generate_resume import GenerateResume
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from api import init_api
 
 def create_app():
     app = Flask(__name__)
@@ -21,7 +18,7 @@ def create_app():
     JWTManager(app)
 
     api = Api(app)
-    app.register_blueprint(resume_bp)
+    api = init_api(api)
 
     return app,api
 
@@ -39,12 +36,7 @@ def init_db():
 
 app,api = create_app()
 CORS(app)
-init_db()
-api.add_resource(LoginUser, '/login')
-api.add_resource(SignUpUser, '/signup')
-api.add_resource(LogoutUser, '/logout')
-api.add_resource(ProfileAPI, '/profile')
-api.add_resource(GenerateResume, '/generate-resume')
+
 
 if __name__ == '__main__':  
     init_db()

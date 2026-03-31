@@ -1,34 +1,27 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import LoginView from '../views/LoginView.vue';
 
 const routes = [
-  { path: '/', redirect: '/dashboard' },
+  { path: '/', redirect: '/login' },
   {
     path: '/login',
     name: 'login',
-    component: LoginView
+    component: () => import('../views/LoginView.vue')
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import('../views/DashboardView.vue')
+    path: '/admin-dashboard',
+    name: 'admin-dashboard',
+    component: () => import('../views/AdminDashboardView.vue')
+  },
+  {
+    path: '/company-dashboard',
+    name: 'company-dashboard',
+    component: () => import('../views/CompanyDashboardView.vue')
   },
   {
     path: '/profile',
     name: 'profile',
     component: () => import('../views/ProfileView.vue')
-  },
-  {
-    path: '/jobs',
-    name: 'jobs',
-    component: () => import('../views/JobsView.vue')
-  },
-  {
-    path: '/leetcode',
-    name: 'leetcode',
-    component: () => import('../views/LeetCodeView.vue')
   }
-
 ];
 
 const router = createRouter({

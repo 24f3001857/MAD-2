@@ -3,6 +3,7 @@ from flask import request
 from flask_jwt_extended import get_jwt_identity,jwt_required
 from models import db
 from models.profile import Profile
+from models.user import User
 
 class ProfileAPI(Resource):
     @jwt_required()
@@ -18,12 +19,18 @@ class ProfileAPI(Resource):
     def put(self):
         user_id = get_jwt_identity()
         profile = Profile.query.filter_by(user_id=user_id).first()
+        payload = request.get_json()
         if profile:
-            payload = request.get_json()
             if not payload:
                 return {'message': 'No data provided'}, 400
             profile.updateData(payload)
             db.session.commit()
             return {'message': 'Profile updated successfully'}, 200
         else:
-            return {'message': 'Profile not found'}, 404
+            user = User.query.filter_by(user_id=user_id).first()
+            db.session.flush() #forces SQLite to assign user_id NOW
+            profile = Profile(user_id=user.user_id,name = user.username,email = user.email)
+            profile.updateData(payload)
+            db.session.add(profile)
+            db.session.commit()
+            return {'message': 'Profile created successfully'}, 201

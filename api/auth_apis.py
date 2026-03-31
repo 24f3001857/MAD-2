@@ -9,7 +9,7 @@ from flask_jwt_extended import create_access_token, jwt_required
 class LoginUser(Resource):
     def post(self):
         login_data = request.get_json()
-
+        
         if not login_data or not login_data.get('username_or_email') or not login_data.get('password'):
             result = {
                 'message': 'No data provided',
@@ -49,7 +49,9 @@ class LoginUser(Resource):
         
         result = {
             'message': 'Login successful',
-            'access_token': access_token
+            'access_token': access_token,
+            'role': user.role,
+            'username': user.username
         }
         return result, 200
 
@@ -76,7 +78,7 @@ class SignUpUser(Resource):
                 'status': 'error'
             }
             return result, 403
-
+            
         username = register_data.get('username')
         email = register_data.get('email')
         password = register_data.get('password')
@@ -102,9 +104,6 @@ class SignUpUser(Resource):
             role=role,
             active=active
         )
-        db.session.flush() #forces SQLite to assign user_id NOW
-        db.session.add(Profile(user_id=user.user_id,name = user.username,email = user.email))
-        db.session.commit()
         result = {
             'message': 'User registered successfully',
             'status': 'success'

@@ -9,6 +9,10 @@ api.interceptors.request.use(config => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+    else{
+        console.log('No token found');
+        return null;
+    }
     return config;
 });
 

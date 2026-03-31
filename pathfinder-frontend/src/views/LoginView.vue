@@ -14,9 +14,16 @@ const signupData = reactive({ username: '', email: '', password: '', role: 'stud
 const handleLogin = async () => {
   try {
     const res = await api.post('/login', loginData);
-    localStorage.setItem('token', res.data.token);
-    localStorage.setItem('role', res.data.role);
-    router.push('/dashboard');
+    const token = res.data.access_token; // Flask-JWT usually returns access_token
+    const role = res.data.role || localStorage.getItem('role'); 
+    localStorage.setItem('token', token);
+    if (role === 'admin') {
+      router.push('/admin-dashboard');
+    } else if (role === 'company') {
+      router.push('/company-dashboard');
+    } else {
+      router.push('/student'); // Default for students
+    }
   } catch (err) {
     alert(err.response?.data?.message || 'Login failed');
   }

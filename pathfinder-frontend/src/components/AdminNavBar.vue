@@ -9,13 +9,13 @@ const route  = useRoute();
 const userName = computed(() => localStorage.getItem('username') || 'User');
 
 const navLinks = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Placement Drives', to: '/placement-drives' },
-  { label: 'Profile', to: '/profile' },
-  {label: 'My Applications', to: '/my-applications'},
+  { label: 'Dashboard', to: '/admin-dashboard' },
+  { label: 'Students', to: '/admin/students' },
+  { label: 'Companies',      to: '/admin/companies'      },
+  { label: 'Placement Drives',   to: '/admin/placement-drives'   },
 ];
 
-const isActive = (path) => route.path === path;//highlight the current tab
+const isActive = (path) => route.path === path;
 
 const logout = () => {
   localStorage.clear();
